@@ -1,9 +1,5 @@
-import os
 import numpy as np
-import pandas as pd
-import matplotlib.pyplot as plt
-from scipy import signal, fft
-from scipy.signal import spectrogram
+from scipy import signal
 
 
 def remove_dc_offset(data):

@@ -1,7 +1,5 @@
 import numpy as np
 from sklearn.cross_decomposition import CCA
-from matplotlib import pyplot as plt
-import pandas as pd
 
 
 def refernce_signals_one_freq(pts, target_freq, fs, n_harmonics = 1):
