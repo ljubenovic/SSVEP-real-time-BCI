@@ -1,5 +1,4 @@
 import time
-import sys
 import keyboard
 import threading
 import queue
