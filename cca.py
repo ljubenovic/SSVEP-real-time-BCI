@@ -41,7 +41,6 @@ def find_correlation(data, references, target_freqs):
 
 def cca_classify(data, references, target_freqs):
 
-    predictions = []
     result = find_correlation(data,references,target_freqs)
     ind_f = np.argmax(result)
     max_corr = result[ind_f]

@@ -4,7 +4,6 @@ import keyboard
 import threading
 import queue
 import numpy as np
-import pandas as pd
 from brainflow.board_shim import BoardShim, BoardIds, BrainFlowInputParams
 import data_manipulation
 import cca
@@ -14,8 +13,8 @@ import cca
 fs = 200
 refresh_rate = 60
 serial_port = 'COM5'
-#board_id = BoardIds.GANGLION_BOARD.value
-board_id = BoardIds.SYNTHETIC_BOARD.value
+board_id = BoardIds.GANGLION_BOARD.value
+#board_id = BoardIds.SYNTHETIC_BOARD.value
 EEG_CHN = {'O1': 0,'Oz': 1,'O2': 2,'POz': 3}
 
 bandwidth = [5, 31]
@@ -88,7 +87,6 @@ def wait_for_enter():
     global stop_eeg_thread
     keyboard.wait("enter")
     stop_eeg_thread = True
-    sys.stdin.flush()
     return
 
 

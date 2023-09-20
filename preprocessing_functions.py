@@ -16,7 +16,6 @@ def notch_filter(x, fs, notch_freq=50, quality_factor=20, ampl_response=False):
     filtered_x = signal.lfilter(b, a, x)
     if ampl_response:
         freq, h = signal.freqz(b, a, fs=fs)
-
         return filtered_x, freq, h
     return filtered_x
     
@@ -27,7 +26,6 @@ def cheby_filter(x, fs, low_f, high_f, order=1, rp=1, ampl_response=False):
     filtered_x = signal.lfilter(b, a, x)
     if ampl_response:
         freq, h = signal.freqz(b, a, fs=fs)
-
         return filtered_x, freq, h
     return filtered_x
 
@@ -46,7 +44,6 @@ def filter(data, fs, bandpass = [6,30]):
     order = 6
     rp = 0.1
     data_filtered = np.apply_along_axis(cheby_filter, -1, data_notch, fs, low, high, order, rp)
-
     return data_filtered
 
 
@@ -61,7 +58,6 @@ def signal_fft(data, fs):
     f = np.fft.fftfreq(n_fft, 1/fs)
     f = f[:len(f)//2]
     f = [round(x, 3) for x in f]
-
     return (data_fft, f)
 
 
