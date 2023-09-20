@@ -41,7 +41,7 @@ def filter_data(rdf, fs, bandwidth, plotting = False):
     return df
 
 
-def psd(df, fs, plotting = False):
+def psd(df, fs, bandwidth, plotting = False):
 
     data = df[['ch1', 'ch2', 'ch3', 'ch4']]
     (data_fft, f) = preprocessing_functions.signal_fft(data, fs)
@@ -55,9 +55,9 @@ def psd(df, fs, plotting = False):
         for i in range(4):
             ax = fig.add_subplot(gs[i // 2, i % 2])
             ax.plot(f,data_psd['ch{}'.format(i+1)], color='b')
-            ax.set_ylabel('ch{}'.format(i+1))
+            ax.set_title(CHN_TO_POS[i])
             ax.set_xlabel('f [Hz]')
-            ax.set_xlim([0, fs/2])
+            ax.set_xlim(bandwidth)
         plt.tight_layout()
         plt.show()
     return  data_psd
@@ -65,13 +65,14 @@ def psd(df, fs, plotting = False):
 
 def plot_spectrograms(df, fs, bandwidth):
 
+    n_fft = 1024
     window_size = int(fs*0.1)
     overlap = int(window_size * 0.5)  # 50% overlap
     fig = plt.figure(figsize=(10, 6))
     gs = gridspec.GridSpec(2, 2)
     for i in range(4):
         ax = fig.add_subplot(gs[i // 2, i % 2])
-        f, t, Sxx = signal.spectrogram(df['ch{}'.format(i+1)], nperseg = window_size, fs = fs, noverlap = overlap, nfft=1024)
+        f, t, Sxx = signal.spectrogram(df['ch{}'.format(i+1)], nperseg = window_size, fs = fs, noverlap = overlap, nfft=n_fft)
         spectrogram_data = np.array(Sxx)
         im = ax.pcolormesh(t, f, spectrogram_data)
         ax.set_ylabel('f [Hz]')
@@ -95,6 +96,7 @@ def save_data(raw_data, fs, bandwidth, session_queue, cca_queue):
         os.makedirs(data_folder)
 
     rdf = format_data(raw_data, eeg_chn)
+    rdf = rdf.iloc[int(2*fs):]    # remove first 2 seconds of data
     raw_data_path = data_folder + r'\raw_data.csv'
     rdf.to_csv(raw_data_path, index = False)
 
@@ -102,7 +104,7 @@ def save_data(raw_data, fs, bandwidth, session_queue, cca_queue):
     data_path = data_folder + r'\data.csv'
     df.to_csv(data_path, index = False)
 
-    data_psd = psd(df, fs, plotting = False)
+    data_psd = psd(df, fs, bandwidth, plotting = False)
     data_psd_path = data_folder + r'\data_psd.csv'
     data_psd.to_csv(data_psd_path, index=False)
 

@@ -52,7 +52,7 @@ def filter(data, fs, bandpass = [6,30]):
 
 def signal_fft(data, fs):
 
-    n_fft = int(2**np.ceil(np.log2(len(data.shape[0]))))
+    n_fft = int(2**np.ceil(np.log2(data.shape[0])))
     data_fft = np.fft.fft(data, n = n_fft, axis = 0)
     data_fft = np.abs(data_fft)
     data_fft = data_fft[:len(data_fft)//2, :]
