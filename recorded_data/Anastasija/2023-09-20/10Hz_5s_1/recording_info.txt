@@ -1,0 +1,10 @@
+Session name: anastasija_10Hz_5s
+Date: 2023-09-20
+Positions of EEG electrodes: 
+	ch1: O1
+	ch2: Oz
+	ch3: O2
+	ch4: POz
+Recording time: 60.15 s
+	Recording started at: 19:21:35
+	Recording ended at: 19:22:40

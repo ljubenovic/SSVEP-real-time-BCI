@@ -1,0 +1,13 @@
+Session name: S02
+Date: 2023-05-24
+Positions of EEG electrodes: 
+	0: O2
+	1: Oz
+	2: O1
+	3: POz
+Frequencies shown on screen:  [7.5, 8.57, 12, 15, 30]
+Recording time: 21
+	Recording started at: /
+	Recording ended at: /
+
+Additional information:
