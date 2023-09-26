@@ -4,6 +4,7 @@ import threading
 import queue
 import numpy as np
 from brainflow.board_shim import BoardShim, BoardIds, BrainFlowInputParams
+import gui
 import data_manipulation
 import cca
 
@@ -13,16 +14,13 @@ fs = 200
 refresh_rate = 60
 serial_port = 'COM5'
 board_id = BoardIds.GANGLION_BOARD.value
-#board_id = BoardIds.SYNTHETIC_BOARD.value
 EEG_CHN = {'O1': 0,'Oz': 1,'O2': 2,'POz': 3}
 
-bandwidth = [5, 31]
 iteration_duration = 2
 
 # CCA parameters
-target_freqs = np.array([refresh_rate/i for i in range(2, 11)]) # 6 Hz, 6.67 Hz, 7.5 Hz, 8.57 Hz, 10 Hz, 12 Hz, 15 Hz, 20 Hz, 30 Hz
 n_harmonics = 1
-corr_threshold = 0.1
+corr_threshold = 0.4
 
 # --- functions ---
 
@@ -58,7 +56,10 @@ def acquire_eeg_data(board, fs, bandwidth, iteration_duration, return_queue):
         df = data_manipulation.filter_data(rdf, fs, bandwidth)
         (f_detected, max_corr) = cca.ssvep_check_cca(df, fs, target_freqs, n_harmonics)
 
-        if f_detected_old and (f_detected == f_detected_old) and (max_corr >= corr_threshold):
+        if f_detected_old and (max_corr >= corr_threshold):
+            print("SSVEP detected at {:.2f} Hz (correlation = {:.2f})".format(f_detected, max_corr))
+            cca_data = np.concatenate((cca_data, np.array([f_detected, max_corr])), axis=1)
+        elif (f_detected == f_detected_old):
             print("SSVEP detected at {:.2f} Hz (correlation = {:.2f})".format(f_detected, max_corr))
             cca_data = np.concatenate((cca_data, np.array([f_detected, max_corr])), axis=1)
         f_detected_old = f_detected
@@ -91,8 +92,10 @@ def wait_for_enter():
 
 # --- main ---
 
-subject_name = input("Enter subject name: ")
-session_name = input("Enter session name: ")
+(subject_name, session_name, num_of_freqs, target_freqs) = gui.get_session_details()
+print(subject_name, session_name, num_of_freqs, target_freqs)
+bandwidth = [min(target_freqs), max(target_freqs)]
+
 path = r'recorded_data\{}'.format(subject_name)
 
 (board, eeg_chn) = prepare_the_board(board_id, serial_port)

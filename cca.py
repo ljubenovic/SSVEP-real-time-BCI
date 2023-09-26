@@ -15,7 +15,7 @@ def refernce_signals_one_freq(pts, target_freq, fs, n_harmonics = 1):
     return reference_signals
 
 
-def reference_signals(pts, target_freqs, fs, n_harmonics = 1):
+def get_reference_signals(pts, target_freqs, fs, n_harmonics = 1):
 
     reference_signals = np.empty((pts,2,len(target_freqs)))
     for i in range(len(target_freqs)):
@@ -52,7 +52,7 @@ def ssvep_check_cca(df, fs, target_freqs, n_harmonics = 1):
     keys = df.keys()
     data = df[keys[0:4]]
     data = df.to_numpy()
-    reference_signals = reference_signals(pts, target_freqs, fs, n_harmonics)
+    reference_signals = get_reference_signals(pts, target_freqs, fs, n_harmonics)
     (f,max_corr) = cca_classify(data, reference_signals, target_freqs)
     return (f, max_corr)
 

@@ -7,6 +7,7 @@ import matplotlib.gridspec as gridspec
 from scipy import signal
 import preprocessing_functions
 
+
 EEG_CHN = {'O1': 0,'Oz': 1,'O2': 2,'POz': 3}
 CHN_TO_POS = {v: k for k, v in EEG_CHN.items()}
 
