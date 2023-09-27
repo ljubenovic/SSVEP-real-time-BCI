@@ -6,21 +6,21 @@ import cca
 fs = 200
 refresh_rate = 60
 
-path = r'recorded_data\Anastasija\2023-09-20\7_5Hz_8_57Hz_10Hz_12Hz_2s'
+folder_path = r'recorded_data\Anastasija\2023-09-20\7_5Hz_8_57Hz_10Hz_12Hz_2s'
 iteration_duration = 2
 target_freqs = [15.0, 12.0, 10.0, 8.57, 7.5, 6.67]
 possible_freqs =  [refresh_rate/i for i in range(2, 11)]
 
-rdf = pd.read_csv(path + r'\raw_data.csv')
-df = pd.read_csv(path + r'\data.csv')
-psd_df = pd.read_csv(path + r'\data_psd.csv')
+rdf = pd.read_csv(folder_path + r'\raw_data.csv')
+df = pd.read_csv(folder_path + r'\data.csv')
+psd_df = pd.read_csv(folder_path + r'\data_psd.csv')
 
 t = [i/fs for i in range(df.shape[0])]
 
 t_int = int(t[-1])
 t_int = t_int - t_int % iteration_duration
 
-file = open(path + r'\analysis.txt','w')
+file = open(folder_path + r'\analysis.txt','w')
 file.write('Possible frequencies: {}\n'.format(possible_freqs))
 file.write('Target frequencies: {}\n'.format(target_freqs))
 file.write('Recording started at: 12:10:56\n')
