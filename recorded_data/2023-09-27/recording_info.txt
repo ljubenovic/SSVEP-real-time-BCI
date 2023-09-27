@@ -1,0 +1,16 @@
+Subject name: 
+Session name: 
+Date: 2023-09-27
+Positions of EEG electrodes: 
+	ch1: O1
+	ch2: Oz
+	ch3: O2
+	ch4: POz
+Recording time: 30.14 s + first 3.0 s of recording that haven't been considered
+	Recording started at: 16:25:06
+	Recording ended at: 16:25:42
+Duration of one loop iteration: 3.00 s
+Frequencies shown on screen: 
+	top: 7.5 Hz	left: 10.0 Hz	right: 6.666666666666667 Hz	bottom: 8.571428571428571 HzBandpass filter: [2, 30] Hz
+Number of harmonics in CCA reference signals: 3
+Correlation threshold: 0.75

@@ -17,7 +17,7 @@ def prepare_the_board(board_id, serial_port):
     return (board, eeg_chn)
 
 
-def acquire_eeg_data(board, fs, bandwidth, iteration_duration, eeg_chn, target_freqs, n_harmonics, corr_threshold, return_queue):
+def acquire_eeg_data(board, fs, bandwidth, iteration_duration, eeg_chn, target_freqs, n_harmonics, corr_ratio_threshold, return_queue):
 
     raw_data = np.empty([15,0])
     cca_df = pd.DataFrame(columns=['frequency', 'correlation', 'time'])
@@ -29,8 +29,8 @@ def acquire_eeg_data(board, fs, bandwidth, iteration_duration, eeg_chn, target_f
     recording_start = time.strftime("%H:%M:%S", time.localtime())
     print("\nStreaming started at: ", recording_start, "\n")
 
-    time.sleep(2)
-    board.get_board_data()  # getting rid of the first 2 seconds of data which is usually noisy
+    time.sleep(iteration_duration)
+    board.get_board_data()  # getting rid of the first (iteration_duration) seconds of data which is usually noisy
 
     time.sleep(iteration_duration)
 
@@ -40,11 +40,13 @@ def acquire_eeg_data(board, fs, bandwidth, iteration_duration, eeg_chn, target_f
         r_data = np.array(board.get_board_data())
         rdf = data_manipulation.format_data(r_data, eeg_chn, fs)
         df = data_manipulation.filter_data(rdf, fs, bandwidth)
-        (f_detected, max_corr) = cca.ssvep_check_cca(df, fs, target_freqs, n_harmonics)
+        (f_detected,R_max,R_sec) = cca.ssvep_check_cca(df, fs, target_freqs, n_harmonics)
+        R_ratio = R_sec/R_max
 
-        if (f_detected_old and (max_corr >= corr_threshold)) or (f_detected_old and (f_detected == f_detected_old)):
-            print("SSVEP detected at {:.2f} Hz (correlation = {:.2f}) at {}".format(f_detected, max_corr, t))
-            new_row = {'frequency': [f_detected], 'correlation': [max_corr], 'time': [t]}
+        #if (R_ratio <= corr_threshold) or (f_detected == f_detected_old):
+        if (R_ratio <= corr_ratio_threshold) and (f_detected == f_detected_old):
+            print("SSVEP detected at {:.2f} Hz (correlation = {:.2f}) at {}".format(f_detected, R_max, t))
+            new_row = {'frequency': [f_detected], 'correlation': [R_max], 'time': [t]}
             new_row = pd.DataFrame(new_row)
             cca_df = pd.concat([cca_df, new_row], ignore_index=True)
         f_detected_old = f_detected

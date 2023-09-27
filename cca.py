@@ -17,7 +17,7 @@ def refernce_signals_one_freq(pts, target_freq, fs, n_harmonics = 1):
 
 def get_reference_signals(pts, target_freqs, fs, n_harmonics = 1):
 
-    reference_signals = np.empty((pts,2,len(target_freqs)))
+    reference_signals = np.empty((pts,2*n_harmonics,len(target_freqs)))
     for i in range(len(target_freqs)):
         reference_signals[:,:,i] = refernce_signals_one_freq(pts, target_freqs[i], fs, n_harmonics)
     return reference_signals
@@ -27,23 +27,28 @@ def find_correlation(data, references, target_freqs):
     
     cca = CCA(n_components = 1)
 
-    result = np.zeros(len(target_freqs))
+    R = np.zeros(len(target_freqs))
     for f_ind in range(len(target_freqs)):
         ref = np.squeeze(references[:, :, f_ind])
         cca.fit(data,ref)
         data_c, ref_c = cca.transform(data,ref)
         corr_coef = np.corrcoef(data_c.T, ref_c.T)[0, 1]
-        result[f_ind] = corr_coef
-    return result
+        R[f_ind] = corr_coef
+    return R
 
 
 def cca_classify(data, references, target_freqs):
 
-    result = find_correlation(data,references,target_freqs)
-    ind_f = np.argmax(result)
-    max_corr = result[ind_f]
+    R = find_correlation(data,references,target_freqs)
+
+    ind_f = np.argmax(R)
+    R_max = R[ind_f]
     f = target_freqs[ind_f]
-    return (f,max_corr)
+
+    partially_sorted = np.partition(R, -2)
+    R_sec = partially_sorted[-2]
+
+    return (f,R_max,R_sec)
 
 
 def ssvep_check_cca(df, fs, target_freqs, n_harmonics = 1):
@@ -53,6 +58,6 @@ def ssvep_check_cca(df, fs, target_freqs, n_harmonics = 1):
     data = df[keys[0:4]]
     data = df.to_numpy()
     reference_signals = get_reference_signals(pts, target_freqs, fs, n_harmonics)
-    (f,max_corr) = cca_classify(data, reference_signals, target_freqs)
-    return (f, max_corr)
+    (f,R_max,R_sec) = cca_classify(data, reference_signals, target_freqs)
+    return (f,R_max,R_sec)
 

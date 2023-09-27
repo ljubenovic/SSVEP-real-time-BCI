@@ -117,11 +117,15 @@ def save_data(raw_data, fs, bandwidth, session_queue, cca_queue):
     for i in range(4):
         file.write('\t'+ 'ch{}: '.format(i+1) + CHN_TO_POS[i]+ '\n')
     t = df['t'].iloc[df.shape[0] - 1]
-    file.write("Recording time: {:.2f} s + first 2 s of recording that haven't been considered\n".format(t))
+    file.write("Recording time: {:.2f} s + first {} s of recording that haven't been considered\n".format(t, iteration_duration))
     file.write('\t'+'Recording started at: ' + recording_start + '\n')
     file.write('\t'+'Recording ended at: ' + recording_end + '\n')
     file.write('Duration of one loop iteration: {:.2f} s\n'.format(iteration_duration))
-    file.write('Target frequencies: ' + str(target_freqs) + ' Hz \n')
+    file.write('Frequencies shown on screen: \n')
+    file.write('\t'+'top: {} Hz'.format(target_freqs[1]))
+    file.write('\t'+'left: {} Hz'.format(target_freqs[3]))
+    file.write('\t'+'right: {} Hz'.format(target_freqs[0]))
+    file.write('\t'+'bottom: {} Hz'.format(target_freqs[2]))
     file.write('Bandpass filter: [{}, {}] Hz\n'.format(bandwidth[0], bandwidth[1]))
     file.write('Number of harmonics in CCA reference signals: ' + str(n_harmonics) + '\n')
     file.write('Correlation threshold: ' + str(corr_threshold) + '\n')
