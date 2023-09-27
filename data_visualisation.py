@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 import matplotlib.gridspec as gridspec
 
 fs = 200
-path = r'recorded_data\Anastasija\2023-09-20\untitled'
+path = r'recorded_data\proba\2023-09-27\proba_4_frekv'
 
 df = pd.read_csv(path + r'\data.csv')
 df = df.iloc[int(2*fs):]

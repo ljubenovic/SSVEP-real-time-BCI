@@ -89,19 +89,18 @@ def plot_spectrograms(df, fs, bandwidth):
 def save_data(raw_data, fs, bandwidth, session_queue, cca_queue):
 
     (subject_name, session_name, path, [recording_start, recording_end], eeg_chn, iteration_duration) = session_queue.get()
-    (target_freqs, n_harmonics, corr_threshold, cca_data) = cca_queue.get()
+    (target_freqs, n_harmonics, corr_threshold, cca_df) = cca_queue.get()
 
     date = time.strftime('%Y-%m-%d')
     data_folder = path + '\{}\{}'.format(date, session_name)
     if not os.path.exists(data_folder):
         os.makedirs(data_folder)
 
-    rdf = format_data(raw_data, eeg_chn)
-    rdf = rdf.iloc[int(2*fs):]    # remove first 2 seconds of data
+    rdf = format_data(raw_data, eeg_chn, fs)
     raw_data_path = data_folder + r'\raw_data.csv'
     rdf.to_csv(raw_data_path, index = False)
 
-    df = filter(rdf, fs, bandwidth, plotting = False)
+    df = filter_data(rdf, fs, bandwidth, plotting = False)
     data_path = data_folder + r'\data.csv'
     df.to_csv(data_path, index = False)
 
@@ -118,19 +117,23 @@ def save_data(raw_data, fs, bandwidth, session_queue, cca_queue):
     for i in range(4):
         file.write('\t'+ 'ch{}: '.format(i+1) + CHN_TO_POS[i]+ '\n')
     t = df['t'].iloc[df.shape[0] - 1]
-    file.write('Recording time: {:.2f} s\n'.format(t))
+    file.write("Recording time: {:.2f} s + first 2 s of recording that haven't been considered\n".format(t))
     file.write('\t'+'Recording started at: ' + recording_start + '\n')
     file.write('\t'+'Recording ended at: ' + recording_end + '\n')
     file.write('Duration of one loop iteration: {:.2f} s\n'.format(iteration_duration))
+    file.write('Target frequencies: ' + str(target_freqs) + ' Hz \n')
     file.write('Bandpass filter: [{}, {}] Hz\n'.format(bandwidth[0], bandwidth[1]))
-    file.write('Target frequencies: ' + str(target_freqs) + 'Hz \n')
     file.write('Number of harmonics in CCA reference signals: ' + str(n_harmonics) + '\n')
     file.write('Correlation threshold: ' + str(corr_threshold) + '\n')
     file.close()
 
     cca_data_path = data_folder + r'\cca_data.csv'
-    cca_df = pd.DataFrame(cca_data, columns=['f_detected', 'correlation'])
-    cca_df.to_csv(cca_data_path, index=False)
+    if cca_df.shape[0] == 0:
+        file = open(cca_data_path,'w')
+        file.write('No SSVEP was detected in this session')
+        file.close()
+    else:
+        cca_df.to_csv(cca_data_path, index=False)
 
     return
 
