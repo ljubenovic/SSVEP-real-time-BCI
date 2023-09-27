@@ -27,7 +27,7 @@ def acquire_eeg_data(board, fs, bandwidth, iteration_duration, eeg_chn, target_f
     board.start_stream()
 
     recording_start = time.strftime("%H:%M:%S", time.localtime())
-    print("\nStreaming started at: \n", recording_start)
+    print("\nStreaming started at: ", recording_start, "\n")
 
     time.sleep(2)
     board.get_board_data()  # getting rid of the first 2 seconds of data which is usually noisy
