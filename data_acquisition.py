@@ -38,6 +38,7 @@ def acquire_eeg_data(board, fs, bandwidth, iteration_duration, eeg_chn, target_f
     while not gui.stop_eeg_thread:
         t1 = time.time()
         t = time.strftime("%H:%M:%S", time.localtime())
+        print("NEW")
         r_data = np.array(board.get_board_data())
         rdf = data_manipulation.format_data(r_data, eeg_chn, fs)
         df = data_manipulation.filter_data(rdf, fs, bandwidth)

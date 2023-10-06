@@ -1,0 +1,19 @@
+Subject name: proba
+Session name: probica
+Date: 2023-10-06
+Positions of EEG electrodes: 
+	ch1: O1
+	ch2: Oz
+	ch3: O2
+	ch4: POz
+Recording time: {:.2f} s + first 2 s of recording that haven't been considered
+	Recording started at: 10:49:38
+	Recording ended at: 10:50:31
+Frequencies shown on screen: 
+	top: 7.50 Hz
+	left: 10.00 Hz
+	right: 6.67 Hz
+	bottom: 8.57 Hz
+Bandpass filter: [2, 30] Hz
+Number of harmonics in CCA reference signals: 2
+Correlation ratio threshold: 1

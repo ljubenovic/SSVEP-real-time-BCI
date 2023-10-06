@@ -23,7 +23,7 @@ def arrow(n_runs, n_trials, trial_freqs, target_freqs, reaction_time, task_time,
     recording_start = time.strftime("%H:%M:%S", time.localtime())
     print("\nStreaming started at: ", recording_start, "\n")
 
-    time.sleep(2)
+    time.sleep(10)
     board.get_board_data()  # getting rid of the first 2 seconds of data which is usually noisy
 
     R_ratio_arr = []
@@ -80,6 +80,7 @@ def arrow(n_runs, n_trials, trial_freqs, target_freqs, reaction_time, task_time,
 
             raw_data = np.concatenate((raw_data, r_data), axis=1)
 
+            print("REST")
             time.sleep(rest_time)
         
 
@@ -109,10 +110,10 @@ path = r'recorded_data\{}'.format(subject_name)
 
 (board, eeg_chn) = data_acquisition.prepare_the_board(board_id, serial_port)
 
-n_runs = 5
+n_runs = 1
 n_trials = 25
 
-trial_duration = 3.5
+trial_duration = 5.5
 reaction_time = 0.5
 task_time = trial_duration - reaction_time
 
@@ -147,7 +148,7 @@ def exit_app():
     return
 
 root = tk.Tk()
-root.attributes('-fullscreen', True)
+#root.attributes('-fullscreen', True)
 root.attributes("-topmost", True)
 root.configure(background='black')
 

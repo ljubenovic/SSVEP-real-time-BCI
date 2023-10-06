@@ -124,7 +124,7 @@ def save_data(raw_data, fs, bandwidth, session_queue, cca_queue):
     if iteration_duration != -1:
         file.write("Recording time: {:.2f} s + first {} s of recording that haven't been considered\n".format(t, iteration_duration))
     else:
-        file.write("Recording time: {:.2f} s + first 2 s of recording that haven't been considered\n")
+        file.write("Recording time: {:.2f} s + first 10 s of recording that haven't been considered\n")
     file.write('\t'+'Recording started at: ' + recording_start + '\n')
     file.write('\t'+'Recording ended at: ' + recording_end + '\n')
     if iteration_duration != -1:
