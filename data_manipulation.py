@@ -89,7 +89,7 @@ def plot_spectrograms(df, fs, bandwidth):
 def save_data(raw_data, fs, bandwidth, session_queue, cca_queue):
 
     (subject_name, session_name, path, [recording_start, recording_end], eeg_chn, iteration_duration) = session_queue.get()
-    (target_freqs, n_harmonics, corr_threshold, cca_df) = cca_queue.get()
+    (target_freqs, n_harmonics, corr_threshold, cca_df, R_ratio_arr) = cca_queue.get()
 
     date = time.strftime('%Y-%m-%d')
     data_folder = path + '\{}\{}'.format(date, session_name)
@@ -108,6 +108,10 @@ def save_data(raw_data, fs, bandwidth, session_queue, cca_queue):
     data_psd_path = data_folder + r'\data_psd.csv'
     data_psd.to_csv(data_psd_path, index=False)
 
+    R_ratio_path = data_folder + r'\R_ratio.csv'
+    R_ratio_arr = pd.DataFrame(R_ratio_arr, columns=['R_ratio'])
+    R_ratio_arr.to_csv(R_ratio_path, index=False)
+
     info_file = data_folder + r'\recording_info.txt'
     file = open(info_file,'w')
     file.write('Subject name: ' + subject_name + '\n')
@@ -117,18 +121,22 @@ def save_data(raw_data, fs, bandwidth, session_queue, cca_queue):
     for i in range(4):
         file.write('\t'+ 'ch{}: '.format(i+1) + CHN_TO_POS[i]+ '\n')
     t = df['t'].iloc[df.shape[0] - 1]
-    file.write("Recording time: {:.2f} s + first {} s of recording that haven't been considered\n".format(t, iteration_duration))
+    if iteration_duration != -1:
+        file.write("Recording time: {:.2f} s + first {} s of recording that haven't been considered\n".format(t, iteration_duration))
+    else:
+        file.write("Recording time: {:.2f} s + first 2 s of recording that haven't been considered\n")
     file.write('\t'+'Recording started at: ' + recording_start + '\n')
     file.write('\t'+'Recording ended at: ' + recording_end + '\n')
-    file.write('Duration of one loop iteration: {:.2f} s\n'.format(iteration_duration))
+    if iteration_duration != -1:
+        file.write('Duration of one loop iteration: {:.2f} s\n'.format(iteration_duration))
     file.write('Frequencies shown on screen: \n')
-    file.write('\t'+'top: {} Hz'.format(target_freqs[1]))
-    file.write('\t'+'left: {} Hz'.format(target_freqs[3]))
-    file.write('\t'+'right: {} Hz'.format(target_freqs[0]))
-    file.write('\t'+'bottom: {} Hz'.format(target_freqs[2]))
+    file.write('\t'+'top: {:.2f} Hz\n'.format(target_freqs[1]))
+    file.write('\t'+'left: {:.2f} Hz\n'.format(target_freqs[3]))
+    file.write('\t'+'right: {:.2f} Hz\n'.format(target_freqs[0]))
+    file.write('\t'+'bottom: {:.2f} Hz\n'.format(target_freqs[2]))
     file.write('Bandpass filter: [{}, {}] Hz\n'.format(bandwidth[0], bandwidth[1]))
     file.write('Number of harmonics in CCA reference signals: ' + str(n_harmonics) + '\n')
-    file.write('Correlation threshold: ' + str(corr_threshold) + '\n')
+    file.write('Correlation ratio threshold: ' + str(corr_threshold) + '\n')
     file.close()
 
     cca_data_path = data_folder + r'\cca_data.csv'

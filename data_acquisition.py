@@ -20,9 +20,8 @@ def prepare_the_board(board_id, serial_port):
 def acquire_eeg_data(board, fs, bandwidth, iteration_duration, eeg_chn, target_freqs, n_harmonics, corr_ratio_threshold, return_queue):
 
     raw_data = np.empty([15,0])
-    cca_df = pd.DataFrame(columns=['frequency', 'correlation', 'time'])
+    cca_df = pd.DataFrame(columns=['frequency','Rmax','R_ratio','time'])
     f_detected_old = None
-    max_corr = 0
     
     board.start_stream()
 
@@ -34,6 +33,8 @@ def acquire_eeg_data(board, fs, bandwidth, iteration_duration, eeg_chn, target_f
 
     time.sleep(iteration_duration)
 
+    R_ratio_arr = []
+
     while not gui.stop_eeg_thread:
         t1 = time.time()
         t = time.strftime("%H:%M:%S", time.localtime())
@@ -42,11 +43,12 @@ def acquire_eeg_data(board, fs, bandwidth, iteration_duration, eeg_chn, target_f
         df = data_manipulation.filter_data(rdf, fs, bandwidth)
         (f_detected,R_max,R_sec) = cca.ssvep_check_cca(df, fs, target_freqs, n_harmonics)
         R_ratio = R_sec/R_max
+        R_ratio_arr.append(R_ratio)
 
-        #if (R_ratio <= corr_threshold) or (f_detected == f_detected_old):
-        if (R_ratio <= corr_ratio_threshold) and (f_detected == f_detected_old):
-            print("SSVEP detected at {:.2f} Hz (correlation = {:.2f}) at {}".format(f_detected, R_max, t))
-            new_row = {'frequency': [f_detected], 'correlation': [R_max], 'time': [t]}
+        #if (R_ratio <= corr_raio_threshold) and (f_detected == f_detected_old):
+        if (R_ratio <= corr_ratio_threshold):
+            print("SSVEP: {:.2f} Hz (Rmax = {:.2f}, Rsec/Rmax = {:.2f})".format(f_detected, R_max, R_ratio))
+            new_row = {'frequency': [f_detected], 'Rmax': [R_max],'R_ratio': [R_ratio],'time': [t]}
             new_row = pd.DataFrame(new_row)
             cca_df = pd.concat([cca_df, new_row], ignore_index=True)
         f_detected_old = f_detected
@@ -64,6 +66,6 @@ def acquire_eeg_data(board, fs, bandwidth, iteration_duration, eeg_chn, target_f
     recording_end = time.strftime("%H:%M:%S", time.localtime())
     print("\nStreaming ended at: ", recording_end)
 
-    return_queue.put(([recording_start, recording_end], raw_data, cca_df))
+    return_queue.put(([recording_start, recording_end], raw_data, cca_df, R_ratio_arr))
     return
 

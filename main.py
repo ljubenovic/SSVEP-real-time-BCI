@@ -37,12 +37,12 @@ stimulus_thread = threading.Thread(target = gui.ssvep_stimulus, args = (target_f
 stimulus_thread.start()
 
 eeg_thread.join()
-(time_vars, raw_data, cca_df) = return_queue.get()
+(time_vars, raw_data, cca_df, R_ratio_arr) = return_queue.get()
 
 session_queue = queue.Queue()
 session_queue.put((subject_name, session_name, path, time_vars, eeg_chn, iteration_duration))
 cca_queue = queue.Queue()
-cca_queue.put((target_freqs, n_harmonics, corr_ratio_threshold, cca_df))
+cca_queue.put((target_freqs, n_harmonics, corr_ratio_threshold, cca_df, R_ratio_arr))
 
 data_manipulation.save_data(raw_data, fs, bandwidth, session_queue, cca_queue)
 

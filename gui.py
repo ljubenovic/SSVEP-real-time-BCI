@@ -32,7 +32,7 @@ def get_session_details():
     window = tk.Tk()
     window.attributes("-topmost", True)
     window.title("Session details")
-    window.geometry("800x600")
+    window.geometry("800x200")
     label_font = ("Helvetica", 12)
     entry_font = ("Helvetica", 12)
 
@@ -148,6 +148,10 @@ def ssvep_stimulus(target_freqs):
 
             freq = freqs[i,j] 
             toggle_color(frame, freq)
+
+    global central_frame
+    central_frame = frames[(middle_y - 1) * n_frames_x + middle_x - 1]
+
     """
     if target_freqs[0] != 0:
         label0 = tk.Label(root, text="{} Hz".format(target_freqs[0]), font=("Helvetica", 10), background="black", foreground="white")
@@ -174,5 +178,5 @@ def ssvep_stimulus(target_freqs):
         root.grid_columnconfigure(j, weight=1)
 
     root.mainloop()
-    return
+    return 
 
