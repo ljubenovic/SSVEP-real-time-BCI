@@ -46,12 +46,15 @@ def acquire_eeg_data(board, fs, bandwidth, iteration_duration, eeg_chn, target_f
         R_ratio = R_sec/R_max
         R_ratio_arr.append(R_ratio)
 
-        #if (R_ratio <= corr_raio_threshold) and (f_detected == f_detected_old):
-        if (R_ratio <= corr_ratio_threshold):
+        new_row = {'frequency': [f_detected], 'Rmax': [R_max],'R_ratio': [R_ratio],'time': [t]}
+        new_row = pd.DataFrame(new_row)
+        cca_df = pd.concat([cca_df, new_row], ignore_index=True)
+
+        if (R_ratio <= corr_ratio_threshold) and (f_detected == f_detected_old):
+        #if (R_ratio <= corr_ratio_threshold):
+        #if True:
             print("SSVEP: {:.2f} Hz (Rmax = {:.2f}, Rsec/Rmax = {:.2f})".format(f_detected, R_max, R_ratio))
-            new_row = {'frequency': [f_detected], 'Rmax': [R_max],'R_ratio': [R_ratio],'time': [t]}
-            new_row = pd.DataFrame(new_row)
-            cca_df = pd.concat([cca_df, new_row], ignore_index=True)
+
         f_detected_old = f_detected
 
         raw_data = np.concatenate((raw_data, r_data), axis=1)

@@ -184,11 +184,11 @@ for i in range(n_frames_y):
             arrow_label = tk.Label(central_frame, image=None, background="black")
             arrow_label.grid(row = middle_y - 1, column = middle_x - 1)
 
-arrow_top = tk.PhotoImage(file = "images\arrow_top_s.png")
-arrow_bottom = tk.PhotoImage(file = "images\arrow_bottom_s.png")
-arrow_left = tk.PhotoImage(file = "images\arrow_left_s.png")
-arrow_right = tk.PhotoImage(file = "images\arrow_right_s.png")
-black = tk.PhotoImage(file = "images\black.png")
+arrow_top = tk.PhotoImage(file = r"images\arrow_top_s.png")
+arrow_bottom = tk.PhotoImage(file = r"images\arrow_bottom_s.png")
+arrow_left = tk.PhotoImage(file = r"images\arrow_left_s.png")
+arrow_right = tk.PhotoImage(file = r"images\arrow_right_s.png")
+black = tk.PhotoImage(file = r"images\black.png")
 
 for i in range(n_frames_y):
     root.grid_rowconfigure(i+1, weight=1)

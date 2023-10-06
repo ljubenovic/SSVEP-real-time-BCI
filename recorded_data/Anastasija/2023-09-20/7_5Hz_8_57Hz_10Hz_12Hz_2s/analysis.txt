@@ -1,9 +1,6 @@
 Possible frequencies: [30.0, 20.0, 15.0, 12.0, 10.0, 8.571428571428571, 7.5, 6.666666666666667, 6.0]
-Target frequencies: [7.5, 8.57, 10, 12]
-Recording time: 120.50 s
-	Recording started at: 20:36:29
-	Recording ended at: 20:38:32
-
+Target frequencies: [15.0, 12.0, 10.0, 8.57, 7.5, 6.67]
+Recording started at: 12:10:56
 Iteration duration: 2 s
 
 Iteration: 0, f: 6.666666666666667 Hz, R_max: 0.4815278684545038, R_sec: 0.4316277122581836, R_sec/R_max = 0.8963711978779585
