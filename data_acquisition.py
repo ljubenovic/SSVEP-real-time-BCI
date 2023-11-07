@@ -40,6 +40,7 @@ def acquire_eeg_data(board, fs, bandwidth, iteration_duration, eeg_chn, target_f
         t = time.strftime("%H:%M:%S", time.localtime())
         print("NEW")
         r_data = np.array(board.get_board_data())
+        #r_data_con = np.concar_data_old
         rdf = data_manipulation.format_data(r_data, eeg_chn, fs)
         df = data_manipulation.filter_data(rdf, fs, bandwidth)
         (f_detected,R_max,R_sec) = cca.ssvep_check_cca(df, fs, target_freqs, n_harmonics)
@@ -50,13 +51,13 @@ def acquire_eeg_data(board, fs, bandwidth, iteration_duration, eeg_chn, target_f
         new_row = pd.DataFrame(new_row)
         cca_df = pd.concat([cca_df, new_row], ignore_index=True)
 
-        if (R_ratio <= corr_ratio_threshold) and (f_detected == f_detected_old):
+        #if (R_ratio <= corr_ratio_threshold) and (f_detected == f_detected_old):
         #if (R_ratio <= corr_ratio_threshold):
-        #if True:
+        if True:
             print("SSVEP: {:.2f} Hz (Rmax = {:.2f}, Rsec/Rmax = {:.2f})".format(f_detected, R_max, R_ratio))
 
         f_detected_old = f_detected
-
+        r_data_old = r_data
         raw_data = np.concatenate((raw_data, r_data), axis=1)
         
         t2 = time.time()

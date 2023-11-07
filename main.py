@@ -13,10 +13,12 @@ serial_port = 'COM5'
 board_id = BoardIds.GANGLION_BOARD.value
 EEG_CHN = {'O1': 0,'Oz': 1,'O2': 2,'POz': 3}
 
-target_freqs = [60/9, 60/8, 60/7, 60/6] # target freqs: 6.67 Hz, 7.5 Hz, 8.57 Hz, 10 Hz
-#possible_freqs =  [refresh_rate/i for i in range(2, 11)]
-possible_freqs = target_freqs
-bandwidth = [2,30]
+#target_freqs = [60/9, 60/8, 60/7, 60/6] # target freqs: 6.67 Hz, 7.5 Hz, 8.57 Hz, 10 Hz
+#target_freqs = [0, 8.57, 0, 0]
+target_freqs = 15
+possible_freqs =  [refresh_rate/i for i in range(2, 11)]
+#possible_freqs = target_freqs
+bandwidth = [0.1,30]
 
 # CCA parameters
 corr_ratio_threshold = 0.75

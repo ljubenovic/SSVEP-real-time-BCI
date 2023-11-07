@@ -1,4 +1,5 @@
 import tkinter as tk
+from PIL import Image, ImageTk
 import numpy as np
 
 stop_eeg_thread = False
@@ -95,34 +96,32 @@ def get_session_details():
 
 
 def ssvep_stimulus(target_freqs):
+    
+    def show_image(background_label, freq):
+        #background_label.config(bg="black")
+        background_label.config(image=photo)
+        period = int((1/freq)*1000) # in ms
+        root.after(period, hide_image, background_label, freq)  
 
-    def toggle_color(frame, freq):
-
-        if freq != 0:
-            current_color = frame.cget("background")
-            if current_color == "black":
-                frame.configure(background="white")
-            else:
-                frame.configure(background="black")
-            period = int((1/freq)*1000) # in ms
-            frame.after(period, toggle_color, frame, freq)
-        return
+    def hide_image(background_label, freq):
+        #background_label.config(bg="white")
+        background_label.config(image=black_photo)
+        period = int((1/freq)*1000) # in ms
+        root.after(period, show_image, background_label, freq)
 
     def exit_app():
-
         global stop_eeg_thread
         stop_eeg_thread = True
         root.quit()
         return
-
 
     root = tk.Tk()
     #root.attributes('-fullscreen', True)
     root.attributes("-topmost", True)
     root.configure(background='black')
 
-    n_frames_x = 9
-    n_frames_y = 5
+    n_frames_x = 2
+    n_frames_y = 1
 
     toolbar_frame = tk.Frame(root, background="black")
     toolbar_frame.grid(row=0, column=0, columnspan=n_frames_x, sticky="nsew")
@@ -134,10 +133,17 @@ def ssvep_stimulus(target_freqs):
     middle_x = n_frames_x // 2 + 1
     middle_y = n_frames_y // 2 + 1
 
-    freqs[0, middle_x - 1] = target_freqs[1]
+    """freqs[0, middle_x - 1] = target_freqs[1]
     freqs[middle_y - 1, 0] = target_freqs[3]
     freqs[middle_y - 1, n_frames_x - 1] = target_freqs[0]
-    freqs[n_frames_y - 1, middle_x - 1] = target_freqs[2]
+    freqs[n_frames_y - 1, middle_x - 1] = target_freqs[2]"""
+
+    freqs[0, middle_x - 1] = target_freqs
+
+    image = Image.open("images\A.png")
+    black_image = Image.open("images\Black.png")
+    photo = ImageTk.PhotoImage(image)
+    black_photo = ImageTk.PhotoImage(black_image)
 
     frames = []
     for i in range(n_frames_y):
@@ -146,31 +152,18 @@ def ssvep_stimulus(target_freqs):
             frame.grid(row=i+1, column=j, padx=10, pady=10, sticky="nsew")
             frames.append(frame)
 
-            freq = freqs[i,j] 
-            toggle_color(frame, freq)
+            freq = freqs[i,j]
+
+            if freq != 0:
+                background_label = tk.Label(frame)
+                background_label.config(bg="black")
+                background_label.place(relwidth=1, relheight=1)
+                show_image(background_label,freq)
+            else:
+                frame.configure(bg="black")
 
     global central_frame
     central_frame = frames[(middle_y - 1) * n_frames_x + middle_x - 1]
-
-    """
-    if target_freqs[0] != 0:
-        label0 = tk.Label(root, text="{} Hz".format(target_freqs[0]), font=("Helvetica", 10), background="black", foreground="white")
-        label0.grid(row=1, column=0)
-    if target_freqs[1] != 0:
-        label1 = tk.Label(root, text="{} Hz".format(target_freqs[1]), font=("Helvetica", 10), background="black", foreground="white")
-        label1.grid(row=1, column=1)
-    if target_freqs[2] != 0:
-        label2 = tk.Label(root, text="{} Hz".format(target_freqs[2]), font=("Helvetica", 10), background="black", foreground="white")
-        label2.grid(row=1, column=2)
-    if target_freqs[3] != 0:
-        label3 = tk.Label(root, text="{} Hz".format(target_freqs[3]), font=("Helvetica", 10), background="black", foreground="white")
-        label3.grid(row=2, column=0)
-    if target_freqs[4] != 0:
-        label4 = tk.Label(root, text="{} Hz".format(target_freqs[4]), font=("Helvetica", 10), background="black", foreground="white")
-        label4.grid(row=2, column=1)
-    if target_freqs[5] != 0:
-        label5 = tk.Label(root, text="{} Hz".format(target_freqs[5]), font=("Helvetica", 10), background="black", foreground="white")
-        label5.grid(row=2, column=2)"""
 
     for i in range(n_frames_y):
         root.grid_rowconfigure(i+1, weight=1)

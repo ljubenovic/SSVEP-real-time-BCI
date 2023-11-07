@@ -130,10 +130,10 @@ def save_data(raw_data, fs, bandwidth, session_queue, cca_queue):
     if iteration_duration != -1:
         file.write('Duration of one loop iteration: {:.2f} s\n'.format(iteration_duration))
     file.write('Frequencies shown on screen: \n')
-    file.write('\t'+'top: {:.2f} Hz\n'.format(target_freqs[1]))
+    """file.write('\t'+'top: {:.2f} Hz\n'.format(target_freqs[1]))
     file.write('\t'+'left: {:.2f} Hz\n'.format(target_freqs[3]))
     file.write('\t'+'right: {:.2f} Hz\n'.format(target_freqs[0]))
-    file.write('\t'+'bottom: {:.2f} Hz\n'.format(target_freqs[2]))
+    file.write('\t'+'bottom: {:.2f} Hz\n'.format(target_freqs[2]))"""
     file.write('Bandpass filter: [{}, {}] Hz\n'.format(bandwidth[0], bandwidth[1]))
     file.write('Number of harmonics in CCA reference signals: ' + str(n_harmonics) + '\n')
     file.write('Correlation ratio threshold: ' + str(corr_threshold) + '\n')

@@ -1,0 +1,24 @@
+Subject name: profesorka
+Session name: p_15_3
+Date: 2023-11-02
+Positions of EEG electrodes: 
+	ch1: O1
+	ch2: Oz
+	ch3: O2
+	ch4: POz
+Recording time: 331.48 s + first 2.0 s of recording that haven't been considered
+	Recording started at: 20:29:07
+	Recording ended at: 20:34:43
+Duration of one loop iteration: 2.00 s
+Frequencies shown on screen: 15 Hz
+Bandpass filter: [0.1, 30] Hz
+Number of harmonics in CCA reference signals: 1
+Correlation ratio threshold: /
+
+---------------------------------------------------------------------------------
+Vremenski intervali u okviru kojih je ispitanik bio fokusiran na stimulus:
+- GUI (kvadrat, mali, B 100%)-
+	20:30:00 - 20:31:03
+- Quick SSVEP (manje slovo A, font 50 %) -
+	20:32:00 - 20:33:00
+	20:33:40 - 20:34:30
