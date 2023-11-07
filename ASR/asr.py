@@ -13,7 +13,7 @@ import numpy as np
 from scipy import linalg
 from numpy.linalg import pinv
 
-from .asr_utils import (geometric_median, fit_eeg_distribution, yulewalk,
+from .ASR.asr_utils import (geometric_median, fit_eeg_distribution, yulewalk,
                         yulewalk_filter, ma_filter, block_covariance)
 
 
