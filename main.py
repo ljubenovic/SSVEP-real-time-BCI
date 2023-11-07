@@ -15,7 +15,9 @@ EEG_CHN = {'O1': 0,'Oz': 1,'O2': 2,'POz': 3}
 
 #target_freqs = [60/9, 60/8, 60/7, 60/6] # target freqs: 6.67 Hz, 7.5 Hz, 8.57 Hz, 10 Hz
 #target_freqs = [0, 8.57, 0, 0]
-target_freqs = 15
+target_freqs = [15]
+x_dim = 2
+y_dim = 1
 possible_freqs =  [refresh_rate/i for i in range(2, 11)]
 #possible_freqs = target_freqs
 bandwidth = [0.1,30]
@@ -35,7 +37,7 @@ return_queue = queue.Queue()
 eeg_thread = threading.Thread(target = data_acquisition.acquire_eeg_data, args = (board, fs, bandwidth, iteration_duration, eeg_chn, possible_freqs, n_harmonics, corr_ratio_threshold, return_queue))
 eeg_thread.start()
 
-stimulus_thread = threading.Thread(target = gui.ssvep_stimulus, args = (target_freqs,))
+stimulus_thread = threading.Thread(target = gui.ssvep_stimulus, args = (target_freqs,x_dim,y_dim,))
 stimulus_thread.start()
 
 eeg_thread.join()

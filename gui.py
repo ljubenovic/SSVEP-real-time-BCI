@@ -95,7 +95,7 @@ def get_session_details():
     return (subject_name, session_name, iteration_duration, n_harmonics)
 
 
-def ssvep_stimulus(target_freqs):
+def ssvep_stimulus(target_freqs, x_dim, y_dim):
     
     def show_image(background_label, freq):
         #background_label.config(bg="black")
@@ -116,12 +116,12 @@ def ssvep_stimulus(target_freqs):
         return
 
     root = tk.Tk()
-    #root.attributes('-fullscreen', True)
+    root.attributes('-fullscreen', True)
     root.attributes("-topmost", True)
     root.configure(background='black')
 
-    n_frames_x = 2
-    n_frames_y = 1
+    n_frames_x = x_dim
+    n_frames_y = y_dim
 
     toolbar_frame = tk.Frame(root, background="black")
     toolbar_frame.grid(row=0, column=0, columnspan=n_frames_x, sticky="nsew")
@@ -133,12 +133,13 @@ def ssvep_stimulus(target_freqs):
     middle_x = n_frames_x // 2 + 1
     middle_y = n_frames_y // 2 + 1
 
-    """freqs[0, middle_x - 1] = target_freqs[1]
-    freqs[middle_y - 1, 0] = target_freqs[3]
-    freqs[middle_y - 1, n_frames_x - 1] = target_freqs[0]
-    freqs[n_frames_y - 1, middle_x - 1] = target_freqs[2]"""
-
-    freqs[0, middle_x - 1] = target_freqs
+    if len(target_freqs) == 1:
+        freqs[0, middle_x - 1] = target_freqs[0]
+    elif len(target_freqs) == 4 and x_dim*y_dim >= 4:
+        freqs[0, middle_x - 1] = target_freqs[1]
+        freqs[middle_y - 1, 0] = target_freqs[3]
+        freqs[middle_y - 1, n_frames_x - 1] = target_freqs[0]
+        freqs[n_frames_y - 1, middle_x - 1] = target_freqs[2]
 
     image = Image.open("images\A.png")
     black_image = Image.open("images\Black.png")
