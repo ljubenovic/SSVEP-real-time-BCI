@@ -108,6 +108,7 @@ def save_data(raw_data, fs, bandwidth, session_queue, cca_queue):
     data_psd_path = data_folder + r'\data_psd.csv'
     data_psd.to_csv(data_psd_path, index=False)
 
+    # Check if the r_ratio is a good indicator of stimulus presence!
     R_ratio_path = data_folder + r'\R_ratio.csv'
     R_ratio_arr = pd.DataFrame(R_ratio_arr, columns=['R_ratio'])
     R_ratio_arr.to_csv(R_ratio_path, index=False)
