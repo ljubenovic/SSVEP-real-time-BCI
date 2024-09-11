@@ -5,6 +5,7 @@ from scipy import signal
 def remove_dc_offset(data):
     return data - data.mean()
 
+# Change lfilter to filtfilt! 
 
 def notch_filter(x, fs, notch_freq=50, quality_factor=20, ampl_response=False):
 
