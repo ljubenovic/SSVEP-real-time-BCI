@@ -7,7 +7,7 @@ fs = 200
 refresh_rate = 60
 
 folder_path = r'recorded_data\Anastasija\2023-09-20\7_5Hz_8_57Hz_10Hz_12Hz_2s'
-iteration_duration = 2
+iteration_duration = 2    # try with smaller intervals
 target_freqs = [15.0, 12.0, 10.0, 8.57, 7.5, 6.67]
 possible_freqs =  [refresh_rate/i for i in range(2, 11)]
 
