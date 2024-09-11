@@ -52,7 +52,6 @@ def acquire_eeg_data(board, fs, bandwidth, iteration_duration, eeg_chn, target_f
         cca_df = pd.concat([cca_df, new_row], ignore_index=True)
 
         #if (R_ratio <= corr_ratio_threshold) and (f_detected == f_detected_old):
-        #if (R_ratio <= corr_ratio_threshold):
         if True:
             print("SSVEP: {:.2f} Hz (Rmax = {:.2f}, Rsec/Rmax = {:.2f})".format(f_detected, R_max, R_ratio))
 
